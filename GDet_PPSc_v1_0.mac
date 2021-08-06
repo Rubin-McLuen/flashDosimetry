@@ -1,0 +1,274 @@
+#---------------------------------------
+#Visualize
+#---------------------------------------
+#/vis/open                               OGL
+#/vis/drawVolume
+#/vis/viewer/set/viewpointThetaPhi       90 90
+#/vis/scene/add/axes
+#/tracking/storeTrajectory                       1
+#/vis/scene/add/trajectories
+#/vis/ogl/set/displayListLimit           10000000
+#/vis/scene/endOfEventAction             accumulate
+#/vis/scene/endOfEventAction accumulate  5000
+
+#/control/execute Macro/Verbose.mac
+#---------------------------------------
+#World
+#---------------------------------------
+/gate/geometry/setMaterialDatabase      GateMaterials.db
+/gate/world/geometry/setXLength         1 m
+/gate/world/geometry/setYLength         1 m
+/gate/world/geometry/setZLength         1 m
+#/gate/world/vis/setVisible 0
+
+#---------------------------------------------------
+#Blocks
+#---------------------------------------------------
+#Plate
+/gate/world/daughters/name                          plate
+/gate/world/daughters/insert                        tessellated
+/gate/plate/geometry/setPathToSTLFile               STLObjects/PlateV2.stl
+/gate/plate/placement/setTranslation                0 0 0 mm
+/gate/plate/setMaterial                             PlateScintX
+
+#Fibers
+/gate/world/daughters/name                                        fibers
+/gate/world/daughters/insert                                      tessellated
+/gate/fibers/placement/setTranslation                         0 0 0 mm
+/gate/fibers/geometry/setPathToSTLFile                        STLObjects/FibersV2.stl
+/gate/fibers/setMaterial                                      FiberScintX
+
+#EdepBox
+#/gate/world/daughters/name              EdepBox
+#/gate/world/daughters/insert             box
+#/gate/EdepBox/geometry/setXLength        40 mm
+#/gate/EdepBox/geometry/setYLength        12 mm
+#/gate/EdepBox/geometry/setZLength        40 mm
+
+#Detector Base
+/gate/world/daughters/name                OpticalSystem_1
+/gate/world/daughters/systemType          OpticalSystem
+/gate/world/daughters/insert                box
+/gate/OpticalSystem_1/geometry/setXLength            4 cm
+/gate/OpticalSystem_1/geometry/setYLength            1.2 cm
+/gate/OpticalSystem_1/geometry/setZLength            2 cm
+/gate/OpticalSystem_1/placement/setTranslation       0 0 50 mm 
+/gate/OpticalSystem_1/setMaterial                FiberScintX
+#/gate/OpticalSystem_1/vis/setColor white
+
+#Detector Crystal
+/gate/OpticalSystem_1/daughters/name              detectorCrystal_1
+/gate/OpticalSystem_1/daughters/insert             box
+/gate/detectorCrystal_1/geometry/setXLength        4 cm
+/gate/detectorCrystal_1/geometry/setYLength        1 mm
+/gate/detectorCrystal_1/geometry/setZLength        4 mm
+/gate/detectorCrystal_1/placement/setTranslation   0 -0.75 -8 mm
+/gate/detectorCrystal_1/repeaters/insert           linear
+/gate/detectorCrystal_1/linear/setRepeatNumber     4
+/gate/detectorCrystal_1/linear/setRepeatVector     0 3 0 mm
+/gate/systems/OpticalSystem_1/crystal/attach       detectorCrystal_1
+/gate/detectorCrystal_1/setMaterial                FiberScintX
+#/gate/detectorCrystal_1/vis/setColor cyan
+
+#DetectorPixel
+/gate/detectorCrystal_1/daughters/name            detectorPixel_1
+/gate/detectorCrystal_1/daughters/insert            box
+/gate/detectorPixel_1/geometry/setXLength            2 mm
+/gate/detectorPixel_1/geometry/setYLength            1 mm
+/gate/detectorPixel_1/geometry/setZLength            4 mm
+#/gate/detectorPixel_1/vis/forceSolid
+/gate/detectorPixel_1/placement/enable
+/gate/detectorPixel_1/repeaters/insert            cubicArray
+/gate/detectorPixel_1/cubicArray/setRepeatVector         2 0 0 mm
+/gate/detectorPixel_1/cubicArray/setRepeatNumberX        20
+/gate/detectorPixel_1/cubicArray/setRepeatNumberY        1
+/gate/detectorPixel_1/cubicArray/setRepeatNumberZ        1
+/gate/detectorPixel_1/attachCrystalSD
+/gate/systems/OpticalSystem_1/pixel/attach        detectorPixel_1
+/gate/detectorPixel_1/setMaterial                 FiberScintX
+#/gate/detectorPixel_1/vis/setColor                red
+
+#Detector Base 2
+/gate/world/daughters/name                OpticalSystem_2
+/gate/world/daughters/systemType          OpticalSystem
+/gate/world/daughters/insert              box
+/gate/OpticalSystem_2/geometry/setXLength            2 cm
+/gate/OpticalSystem_2/geometry/setYLength            1.2 cm
+/gate/OpticalSystem_2/geometry/setZLength            4 cm
+/gate/OpticalSystem_2/placement/setTranslation       -50 0 0 mm
+/gate/OpticalSystem_2/setMaterial                FiberScintX
+#/gate/OpticalSystem_2/vis/setColor white
+
+#Detector Crystal 2
+/gate/OpticalSystem_2/daughters/name              detectorCrystal_2
+/gate/OpticalSystem_2/daughters/insert box
+/gate/detectorCrystal_2/geometry/setXLength        4 mm
+/gate/detectorCrystal_2/geometry/setYLength        1 mm
+/gate/detectorCrystal_2/geometry/setZLength        4 cm
+/gate/detectorCrystal_2/placement/setTranslation        8 0.75 0 mm
+/gate/detectorCrystal_2/repeaters/insert           linear
+/gate/detectorCrystal_2/linear/setRepeatNumber     4
+/gate/detectorCrystal_2/linear/setRepeatVector     0 3 0 mm
+/gate/systems/OpticalSystem_2/crystal/attach        detectorCrystal_2
+/gate/detectorCrystal_2/setMaterial                FiberScintX
+
+#DetectorPixel2
+/gate/detectorCrystal_2/daughters/name            detectorPixel_2
+/gate/detectorCrystal_2/daughters/insert          box
+/gate/detectorPixel_2/geometry/setXLength            4 mm
+/gate/detectorPixel_2/geometry/setYLength            1 mm
+/gate/detectorPixel_2/geometry/setZLength            2 mm
+#/gate/detectorPixel_2/vis/forceSolid
+/gate/detectorPixel_2/placement/enable
+/gate/detectorPixel_2/repeaters/insert            cubicArray
+/gate/detectorPixel_2/cubicArray/setRepeatVector        0 0 2 mm
+/gate/detectorPixel_2/cubicArray/setRepeatNumberX        1
+/gate/detectorPixel_2/cubicArray/setRepeatNumberY        1
+/gate/detectorPixel_2/cubicArray/setRepeatNumberZ        20
+/gate/detectorPixel_2/attachCrystalSD
+/gate/systems/OpticalSystem_2/pixel/attach        detectorPixel_2
+/gate/detectorPixel_2/setMaterial                 FiberScintX
+#/gate/detectorPixel_2/vis/setColor                red
+
+#Source Marker
+/gate/world/daughters/name                         sourceBlock
+/gate/world/daughters/insert                       box
+/gate/sourceBlock/placement/setTranslation         0 3 0 cm
+/gate/sourceBlock/geometry/setXLength              2 mm
+/gate/sourceBlock/geometry/setYLength              2 mm
+/gate/sourceBlock/geometry/setZLength              2 mm
+#/gate/sourceBlock/vis/setColor                     cyan
+
+#-------------------------------
+#Physics
+#-------------------------------
+/gate/physics/addPhysicsList emlivermore #Standard physics
+/gate/physics/addProcess OpticalAbsorption
+/gate/physics/addProcess OpticalRayleigh
+/gate/physics/addProcess OpticalBoundary
+/gate/physics/addProcess OpticalMie
+/gate/physics/addProcess OpticalWLS
+/gate/physics/addProcess Scintillation
+
+#-
+#Actor
+#-
+#Energy
+#/gate/actor/addActor  EnergySpectrumActor                MyActor
+#/gate/actor/MyActor/save                                 Output/plateoutput.root
+#/gate/actor/MyActor/attachTo                             plate
+#/gate/actor/MyActor/energySpectrum/setEmin               2 eV
+#/gate/actor/MyActor/energySpectrum/setEmax               5 eV
+#/gate/actor/MyActor/energySpectrum/setNumberOfBins       2000
+
+#/gate/actor/addActor  EnergySpectrumActor                MyActor2
+#/gate/actor/MyActor2/save                                 Output/fiberoutput.root
+#/gate/actor/MyActor2/attachTo                             fibers
+#/gate/actor/MyActor2/energySpectrum/setEmin               2 eV
+#/gate/actor/MyActor2/energySpectrum/setEmax               5 eV
+#/gate/actor/MyActor2/energySpectrum/setNumberOfBins       2000
+
+#/gate/actor/addActor  EnergySpectrumActor                MyActor3
+#/gate/actor/MyActor3/save                                 Output/fiberoutput.root
+#/gate/actor/MyActor3/attachTo                             OpticalSystem_1
+#/gate/actor/MyActor3/energySpectrum/setEmin               2 eV
+#/gate/actor/MyActor3/energySpectrum/setEmax               5 eV
+#/gate/actor/MyActor3/energySpectrum/setNumberOfBins       2000
+
+#/gate/actor/addActor                        DoseActor   initEdep
+#/gate/actor/initEdep/saveEveryNEvents       1
+#/gate/actor/initEdep/enableEdep             false
+#/gate/actor/initEdep/enableDose             true
+#/gate/actor/initEdep/enableNumberOfHits     false
+#/gate/actor/initEdep/attachTo               plate
+#/gate/actor/initEdep/setResolution          20 6 20
+#/gate/actor/initEdep/stepHitType            random
+#/gate/actor/initEdep/save  NewRunOutputs/output38/h03_e06_a0.5_edep.txt
+
+/gate/actor/addActor    ParticleInVolumeActor        ParticleCounter2
+/gate/actor/ParticleCounter2/save  NewRunOutputs/output38/h03_e06_a0.5_particle_counter_2.txt
+/gate/actor/ParticleCounter2/attachTo                detectorCrystal_2
+/gate/actor/ParticleCounter2/setResolution           1 4 20
+/gate/actor/ParticleCounter2/stepHitType             random
+
+/gate/actor/addActor    ParticleInVolumeActor        ParticleCounter1
+/gate/actor/ParticleCounter1/save  NewRunOutputs/output38/h03_e06_a0.5_particle_counter_1.txt
+/gate/actor/ParticleCounter1/attachTo                detectorCrystal_1
+/gate/actor/ParticleCounter1/setResolution           20 4 1
+/gate/actor/ParticleCounter1/stepHitType             random
+
+/gate/actor/addActor   KillActor                           KilledTracks1
+/gate/actor/KilledTracks1/save                             Output/KilledTracks1.txt
+/gate/actor/KilledTracks1/attachTo                         plate
+/gate/actor/KilledTracks1/addFilter                        energyFilter
+/gate/actor/KilledTracks1/energyFilter/setEmin             2.5 eV
+/gate/actor/KilledTracks1/energyFilter/setEmax             2.75 eV
+
+#
+#Initialize
+#
+/gate/run/initialize
+
+#Surfaces
+/gate/fibers/surfaces/name                       world_to_fibers
+/gate/fibers/surfaces/insert                     world
+/gate/fibers/surfaces/world_to_fibers/setSurface    rough_teflon_wrapped
+
+/gate/detectorPixel_1/surfaces/name                            ep2
+/gate/detectorPixel_1/surfaces/insert                          fibers
+/gate/detectorPixel_1/surfaces/ep2/setSurface                  perfect_apd
+
+/gate/detectorPixel_2/surfaces/name                            ep2
+/gate/detectorPixel_2/surfaces/insert                          fibers
+/gate/detectorPixel_2/surfaces/ep2/setSurface                  perfect_apd
+
+#
+#Source
+#
+/gate/source/addSource               BeamS gps
+/gate/source/BeamS/gps/type          Point
+/gate/source/BeamS/gps/particle      e-
+/gate/source/BeamS/gps/energytype    Mono
+/gate/source/BeamS/gps/monoenergy    20 MeV
+/gate/source/BeamS/setType           backtoback
+/gate/source/BeamS/gps/shape         Cylinder
+/gate/source/BeamS/gps/radius        1 cm
+/gate/source/BeamS/gps/halfz         1 mm
+/gate/source/BeamS/gps/centre        .0 .0 .0 m
+/gate/source/BeamS/gps/angtype       iso
+/gate/source/BeamS/gps/mintheta      80 deg
+/gate/source/BeamS/gps/maxtheta      100 deg
+/gate/source/BeamS/gps/minphi        80 deg
+/gate/source/BeamS/gps/maxphi        100 deg
+/gate/source/BeamS/attachTo          sourceBlock
+#/gate/source/BeamS/gps/polarization  1 0 0
+
+
+/gate/application/setTotalNumberOfPrimaries 1000
+
+
+#-
+#Output
+#-
+/gate/output/allowNoOutput
+/gate/output/root/enable
+/gate/output/root/setFileName             Output/OutputTest
+/gate/output/root/setRootHitFlag          1
+/gate/output/root/setRootSinglesFlag      1
+/gate/output/root/setRootOpticalFlag      1
+/gate/output/root/setRootRecordFlag       1
+/gate/output/root/setSaveRndmFlag         1
+/gate/output/root/setRootNtupleFlag       1
+#/gate/output/analysis/disable
+#/gate/output/fastanalysis/enable
+
+
+#-
+#Finalize
+#-
+
+/gate/application/start
+#/vis/reviewKeptEvents
+#/vis/enable
+#vis/viewer/rebuild
+#/gate/application/start
